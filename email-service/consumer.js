@@ -7,10 +7,9 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const env = process.env.ENVIROMENT
 
 async function start() {
-  const conn = await amqp.connect('amqp://localhost');
+  const conn = await amqp.connect(process.env.CLOUDAMQP_URL||'amqp://localhost');
   const ch = await conn.createChannel();
   await ch.assertQueue('emailQueue');
-
   ch.consume('emailQueue', async (msg) => {
     const message  = JSON.parse(msg);
     await sendEmail( message);
