@@ -1,6 +1,6 @@
 const Notification = require('../models/notifications');
 const { publishMessage } = require('./producer');
-
+const {sendEmail}=require("../email-service/consumer")
 exports.sendNotification = async (request, h) => {
   const { user, type, to, message, redirectUrl, targetId, targetType } = request.payload;
 
@@ -24,7 +24,7 @@ exports.sendNotification = async (request, h) => {
 exports.sendSupportEmail = async (request, h) => {
   const { message, subject } = request.payload;
 
-  const to = ["omri@dynatondata.com"];
+  const to = ["omri@dynatondata.com","las@dynatondata.com"];
   const msg = {
     to,
     from: "support@dynatondata.com",
@@ -32,11 +32,28 @@ exports.sendSupportEmail = async (request, h) => {
     text: message,
   };
 
-  await publishMessage('emailQueue', msg);
+ // await publishMessage('emailQueue', msg);
 
-  return { message: "Email Scheduled for sending successfully" };
+ sendEmail(msg)
+  return { message: "Email send successfully" };
 };
 
+
+exports.sendEmailNofication = async (request, h) => {
+  const { message, subject,to } = request.payload;
+
+  const msg = {
+    to,
+    from: "support@dynatondata.com",
+    subject,
+    text: message,
+  };
+
+ // await publishMessage('emailQueue', msg);
+
+ sendEmail(msg)
+  return { message: "Email send successfully" };
+};
 exports.getAllNotifications = async (request, h) => {
   const notification = await Notification.find().sort({ createdAt: -1 });
   return { count: notification.length, notification };

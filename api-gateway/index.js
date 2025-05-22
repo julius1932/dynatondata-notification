@@ -31,7 +31,7 @@ const init = async () => {
 
   await server.start();
   console.log(`API Gateway running at ${server.info.uri}`);
-  emailConsumer.start().catch(console.error);
+  //emailConsumer.start().catch(console.error);
 };
 
 init();

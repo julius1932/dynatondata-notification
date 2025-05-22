@@ -34,7 +34,23 @@ module.exports = [
       description: 'Send support email',
       validate: {
         payload: Joi.object({
-          subject: Joi.string(),
+          subject: Joi.string().required(),
+          message: Joi.string().required(),
+        }),
+      },
+      handler: controller.sendSupportEmail,
+    }
+  },
+  {
+    method: 'POST',
+    path: `${base}/sendEmailNotification`,
+    options: {
+      tags: ['api'],
+      description: 'Send Notification email',
+      validate: {
+        payload: Joi.object({
+          to: Joi.string().required(),
+          subject: Joi.string().required(),
           message: Joi.string().required(),
         }),
       },

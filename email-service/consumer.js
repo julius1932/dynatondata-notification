@@ -7,14 +7,14 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const env = process.env.ENVIROMENT
 
 async function start() {
-  const conn = await amqp.connect(process.env.CLOUDAMQP_URL||'amqp://localhost');
+   const conn = await amqp.connect(process.env.CLOUDAMQP_URL||'amqp://localhost');
   const ch = await conn.createChannel();
   await ch.assertQueue('emailQueue');
   ch.consume('emailQueue', async (msg) => {
-    const message  = JSON.parse(msg);
+    const message  =  JSON.parse(msg.toString());
     await sendEmail( message);
     ch.ack(msg);
-  });
+  });  
 }
 
 async function sendEmail( msg) {
@@ -30,5 +30,6 @@ async function sendEmail( msg) {
  
 }
 module.exports={
-start
+start,
+sendEmail
 }
