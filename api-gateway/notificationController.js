@@ -1,22 +1,18 @@
 const Notification = require('../models/notifications');
 const { publishMessage } = require('./producer');
-const {sendEmail}=require("../email-service/consumer")
-exports.sendNotification = async (request, h) => {
-  const { user, type, to, message, redirectUrl, targetId, targetType } = request.payload;
+const {sendEmail}=require("../email-service/consumer");
+const {sendSMS}=require("../sms-service/consumer");
+exports.saveNotification = async (request, h) => {
+  const { user, type, message, redirectUrl, targetId, targetType } = request.payload;
 
   const notifDoc = await Notification.create({
     user,
     message,
-    type: "general",
+    type: type|| "general",
     redirectUrl,
     targetId,
     targetType,
   });
-
-  await publishMessage(
-    type === 'email' ? 'emailQueue' : 'smsQueue',
-    { to, message, notificationId: notifDoc._id }
-  );
 
   return notifDoc;
 };
@@ -38,6 +34,11 @@ exports.sendSupportEmail = async (request, h) => {
   return { message: "Email send successfully" };
 };
 
+exports.sendSMSNotification = async (request, h) => {
+  const { message, phone } = request.payload;
+  sendSMS(phone, message)
+  return { message: "SMS send  successfully" };
+};
 
 exports.sendEmailNofication = async (request, h) => {
   const { message, subject,to } = request.payload;

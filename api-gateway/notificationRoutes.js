@@ -23,7 +23,7 @@ module.exports = [
           targetType: Joi.string().optional(),
         }),
       },
-      handler: controller.sendNotification,
+      handler: controller.saveNotification,
     }
   },
   {
@@ -51,6 +51,21 @@ module.exports = [
         payload: Joi.object({
           to: Joi.string().required(),
           subject: Joi.string().required(),
+          message: Joi.string().required(),
+        }),
+      },
+      handler: controller.sendEmailNofication,
+    }
+  },
+  {
+    method: 'POST',
+    path: `${base}/sendSMSNotification`,
+    options: {
+      tags: ['api'],
+      description: 'Send SMS Notification',
+      validate: {
+        payload: Joi.object({
+          phone: Joi.string().required(),
           message: Joi.string().required(),
         }),
       },
