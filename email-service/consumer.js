@@ -1,4 +1,4 @@
-// email-service/consumer.js
+require('dotenv').config();
 const amqp = require('amqplib');
 
 const sgMail = require("@sendgrid/mail");
@@ -30,8 +30,6 @@ async function sendEmail( msg) {
     }
  
 }
-module.exports = {
-  sendEmail,
-  start
+module.exports={
+start
 }
-//start();

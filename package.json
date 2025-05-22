@@ -4,19 +4,19 @@
   "description": "Microservice for sending notifications via email or SMS using Hapi.js, MongoDB, and RabbitMQ",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node api-gateway/index.js",
     "consumer:email": "node consumers/email-consumer.js"
   },
   "dependencies": {
     "@hapi/hapi": "^21.3.1",
-    "@hapi/inert": "^7.1.0",
-    "@hapi/vision": "^7.1.1",
+    "@hapi/inert": "^7.0.1",
+    "@hapi/vision": "^7.0.3",
     "amqplib": "^0.10.3",
     "dotenv": "^16.4.5",
-    "hapi-swagger": "^15.2.0",
+    "hapi-swagger": "^17.3.2",
     "joi": "^17.11.0",
     "mongoose": "^8.3.1",
-    "nodemailer": "^6.9.13"
+    "@sendgrid/mail": "^7.7.0"
   },
   "devDependencies": {},
   "author": "",
