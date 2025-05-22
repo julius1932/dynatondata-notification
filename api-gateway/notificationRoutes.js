@@ -3,12 +3,12 @@ const { USER_ROLES_ENUM } = require('../constants');
 const controller = require('./notificationController');
 
 
-const base= "notification";
+const base= "/notifications";
 
 module.exports = [
   {
     method: 'POST',
-    path: '/add',
+    path: `${base}/add`,
     options: {
       tags: ['api'],
       description: 'Send a notification',
@@ -28,7 +28,7 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/sendSupportEmail',
+    path: `${base}/sendSupportEmail`,
     options: {
       tags: ['api'],
       description: 'Send support email',
@@ -43,7 +43,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/notifications',
+    path: `${base}`,
     options: {
       tags: ['api'],
       description: 'Get all notifications',
@@ -52,7 +52,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/all/{userId}/{role}',
+    path: `${base}/all/{userId}/{role}`,
     options: {
       tags: ['api'],
       description: 'Get user-specific notifications',
