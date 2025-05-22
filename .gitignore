@@ -1,0 +1,10 @@
+
+*.ps1
+*.bak
+node_modules
+.idea
+script/dist
+writable/tmp
+writable/data
+*.csv
+.DS_Store
