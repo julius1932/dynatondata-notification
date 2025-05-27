@@ -11,12 +11,12 @@ module.exports = [
     path: `${base}/add`,
     options: {
       tags: ['api'],
-      description: 'Send a notification',
+      description: 'Save Notification',
       validate: {
         payload: Joi.object({
           user: Joi.string().optional(),
           type: Joi.string().required(),
-          to: Joi.string().required(),
+          status:Joi.boolean().optional().default(false),
           message: Joi.string().required(),
           redirectUrl: Joi.string().optional(),
           targetId: Joi.string().optional(),
@@ -99,5 +99,33 @@ module.exports = [
       },
       handler: controller.getUserNotifications,
     }
+  },{
+    method: 'PATCH',
+    path: `${base}/dismiss`,
+    options: {
+      tags: ['api'],
+      description: 'Dismiss user-specific notification',
+      validate: {
+        payload: Joi.object({
+          id: Joi.string().required(),
+          userId: Joi.string().required(),
+        })
+      },
+      handler: controller.getUserNotifications,
+    }
   }
+
 ];
+
+/* 
+  "_id": "682efb9a44f32ff61706d00a",
+      "user": "67b2f059d00db415acd68870",
+      "message": "New SMS Campaign Created: Unicef Outreach by Hopkins",
+      "type": "new_sms_campaign",
+      "status": false,
+      "targetId": "682efb9a44f32ff61706d008",
+      "targetType": "advertiser_sms_campaign",
+      "createdAt": "2025-05-22T10:25:30.682Z",
+      "updatedAt": "2025-05-22T10:25:30.682Z",
+      "__v": 0
+    } */

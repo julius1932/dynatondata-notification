@@ -31,3 +31,9 @@ A simple Node.js-based notification microservice that sends notifications via **
    ```bash
    git clone https://github.com/your-username/notification-api.git
    cd notification-api
+
+
+---
+
+## API Documentation
+   http://localhost:3000/documentation
