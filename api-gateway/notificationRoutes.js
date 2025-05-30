@@ -17,7 +17,7 @@ module.exports = [
     path: `${base}/send/support`,
     options: {
       tags: ['api'],
-      description: 'Send Email Notification',
+      description: 'Send Email Notification for Support',
       validate: {
         payload: supportNotificationPayload,
       },
