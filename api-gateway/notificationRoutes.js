@@ -1,89 +1,72 @@
 const Joi = require('joi');
 const { USER_ROLES_ENUM } = require('../constants');
 const controller = require('./notificationController');
+const {
+  displayNotificationPayload,
+  smsNotificationPayload,
+  emailNotificationPayload,
+  supportNotificationPayload
+} = require('../validations/notification.validation');
 
 
 const base= "/notifications";
 
 module.exports = [
-  {
+     {
     method: 'POST',
-    path: `${base}/add`,
+    path: `${base}/send/support`,
     options: {
       tags: ['api'],
-      description: 'Save Notification',
+      description: 'Send Email Notification',
       validate: {
-        payload: Joi.object({
-          user: Joi.string().optional(),
-          type: Joi.string().required(),
-          status:Joi.boolean().optional().default(false),
-          message: Joi.string().required(),
-          redirectUrl: Joi.string().optional(),
-          targetId: Joi.string().optional(),
-          targetType: Joi.string().optional(),
-        }),
+        payload: supportNotificationPayload,
       },
-      handler: controller.saveNotification,
+      handler: controller.sendSupportEmailNotification,
     }
-  },
-  {
+  }, 
+   {
     method: 'POST',
-    path: `${base}/sendSupportEmail`,
+    path: `${base}/send/displayads`,
     options: {
       tags: ['api'],
-      description: 'Send support email',
+      description: 'Send Display Ads Notification',
       validate: {
-        payload: Joi.object({
-          subject: Joi.string().required(),
-          message: Joi.string().required(),
-        }),
+        payload: displayNotificationPayload,
       },
-      handler: controller.sendSupportEmail,
+      handler: controller.sendToDisplay,
     }
-  },
+  }, 
+
   {
     method: 'POST',
-    path: `${base}/sendEmailNotification`,
-    options: {
-      tags: ['api'],
-      description: 'Send Notification email',
-      validate: {
-        payload: Joi.object({
-          to: Joi.string().required(),
-          subject: Joi.string().required(),
-          message: Joi.string().required(),
-        }),
-      },
-      handler: controller.sendEmailNofication,
-    }
-  },
-  {
-    method: 'POST',
-    path: `${base}/sendSMSNotification`,
+    path: `${base}/send/sms`,
     options: {
       tags: ['api'],
       description: 'Send SMS Notification',
       validate: {
-        payload: Joi.object({
-          phone: Joi.string().required(),
-          message: Joi.string().required(),
-        }),
+        payload: smsNotificationPayload,
       },
-      handler: controller.sendSupportEmail,
+      handler: controller.sendSmsNotification,
     }
-  },
-  {
-    method: 'GET',
-    path: `${base}`,
+  }, 
+
+   {
+    method: 'POST',
+    path: `${base}/send/email`,
     options: {
       tags: ['api'],
-      description: 'Get all notifications',
-      handler: controller.getAllNotifications,
+      description: 'Send Email Notification',
+      validate: {
+        payload: emailNotificationPayload,
+      },
+      handler: controller.sendEmailNotification,
     }
-  },
+  }, 
+
+  
   {
     method: 'GET',
-    path: `${base}/all/{userId}/{role}`,
+    path: `${base}/{userId}`,
     options: {
       tags: ['api'],
       description: 'Get user-specific notifications',
@@ -94,7 +77,6 @@ module.exports = [
         }),
         params: Joi.object({
           userId: Joi.string().required(),
-          role: Joi.string().valid(...USER_ROLES_ENUM).required(),
         }),
       },
       handler: controller.getUserNotifications,
@@ -108,24 +90,10 @@ module.exports = [
       validate: {
         payload: Joi.object({
           id: Joi.string().required(),
-          userId: Joi.string().required(),
-        })
+        }).label('DismissNotificationPayload')
       },
-      handler: controller.getUserNotifications,
+      handler: controller.dismissNotification,
     }
   }
 
 ];
-
-/* 
-  "_id": "682efb9a44f32ff61706d00a",
-      "user": "67b2f059d00db415acd68870",
-      "message": "New SMS Campaign Created: Unicef Outreach by Hopkins",
-      "type": "new_sms_campaign",
-      "status": false,
-      "targetId": "682efb9a44f32ff61706d008",
-      "targetType": "advertiser_sms_campaign",
-      "createdAt": "2025-05-22T10:25:30.682Z",
-      "updatedAt": "2025-05-22T10:25:30.682Z",
-      "__v": 0
-    } */

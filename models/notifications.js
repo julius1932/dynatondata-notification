@@ -8,19 +8,11 @@ const publisherSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    type: {
-      type: String,
-      // can be general, for-advertiser, for-publisher, for-admin, for-agency , for-user
-    },
     status: {
         type: Boolean,
         default: false,
         // true means read , false means unread
     },
-    redirectUrl: {
-      type: String,
-    },
-    
     targetId:{
       type: String,
       default: "",

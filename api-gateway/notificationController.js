@@ -5,15 +5,13 @@ const {sendEmail}=require("../email-service/consumer");
 const {sendSMS}=require("../sms-service/consumer");
 
 
-exports.saveNotification = async (request, h) => {
+exports.sendToDisplay = async (request, h) => {
   try{
-  const { user, type, message, redirectUrl, targetId, targetType } = request.payload;
+  const { user, message,  targetId, targetType } = request.payload;
 
   const notification = await Notification.create({
     user,
     message,
-    type: type|| "general",
-    redirectUrl,
     targetId,
     targetType,
   });
@@ -23,7 +21,7 @@ throw onError(error, 'Failed to save new Notification');
 }
 };
 
-exports.sendSupportEmail = async (request, h) => {
+exports.sendSupportEmailNotification = async (request, h) => {
   try{
   const { message, subject } = request.payload;
 
@@ -44,7 +42,7 @@ exports.sendSupportEmail = async (request, h) => {
 }
 };
 
-exports.sendSMSNotification = async (request, h) => {
+exports.sendSmsNotification = async (request, h) => {
   try{
   const { message, phone } = request.payload;
   sendSMS(phone, message)
@@ -54,7 +52,7 @@ exports.sendSMSNotification = async (request, h) => {
   }
 };
 
-exports.sendEmailNofication = async (request, h) => {
+exports.sendEmailNotification = async (request, h) => {
   try{
   const { message, subject,to } = request.payload;
 
@@ -73,14 +71,8 @@ exports.sendEmailNofication = async (request, h) => {
     throw onError(error, 'Failed to send Email notification');
 }
 };
-exports.getAllNotifications = async (request, h) => {
-  try{
-  const notification = await Notification.find().sort({ createdAt: -1 });
-  return h.response({ count: notification.length, notification }).code(200);
-  }catch(error){
-     throw onError(error, 'Failed to get notification');
-  }
-};
+
+
 
 exports.getUserNotifications = async (request, h) => {
   try{
@@ -89,14 +81,10 @@ exports.getUserNotifications = async (request, h) => {
 
   let [{ data, pagination }] = await Notification.aggregate([
     {
-      $match: {
-        $or: [
-          { type: "general" },
-          { type: role },
-          { user: userId },
-        ],
-        $and: [{ status: false }],
-      },
+     $match: {
+        user: userId,
+       status: false
+    }
     },
     {
       $facet: {
@@ -131,11 +119,10 @@ exports.getUserNotifications = async (request, h) => {
 exports.dismissNotification = async (request,h) => {
 
     try {
-        const { id, userId } = request.payload;
+        const { id } = request.payload;
 
         const notification = await Notification.findOneAndUpdate({
-            _id: id,
-            user: userId
+            _id: id
         }, {
             status: true
         }, {
