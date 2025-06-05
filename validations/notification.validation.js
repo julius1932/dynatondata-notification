@@ -26,7 +26,7 @@ const displayNotificationPayload = Joi.object({
 const smsNotificationPayload = Joi.object({
   phone: Joi.string().required(),
   message: Joi.string().required(),
-}).label('DisplayPayload');
+}).label('smsNotificationPayload');
 
 
 
